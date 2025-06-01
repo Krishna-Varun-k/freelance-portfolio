@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Find Freelancers{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Search Freelancers</h5>
+                    <form method="GET" action="{% url 'search' %}" class="row g-3">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="q" placeholder="Search by username or skills" value="{{ query }}">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for freelancer in freelancers %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        {% if freelancer.profile_picture %}
+                            <img src="{{ freelancer.profile_picture.url }}" alt="Profile Picture" class="img-fluid rounded-circle profile-picture">
+                        {% else %}
+                            <img src="https://via.placeholder.com/150" alt="Default Profile Picture" class="img-fluid rounded-circle profile-picture">
+                        {% endif %}
+                        <h5 class="card-title mt-3">{{ freelancer.user.username }}</h5>
+                        <p class="card-text">{{ freelancer.bio|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-center gap-2 mb-2">
+                            <span class="badge bg-primary">{{ freelancer.experience_years }} years</span>
+                            <span class="badge bg-success">Rating: {{ freelancer.rating }}/5</span>
+                            {% if freelancer.is_verified %}
+                                <span class="badge bg-info">Verified</span>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'profile' freelancer.user.username %}" class="btn btn-primary">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5>No freelancers found</h5>
+                        <p>Try a different search term or browse all freelancers.</p>
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary">Browse All Freelancers</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - {{ profile.user.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Profile</h5>
+                {% if profile.profile_picture %}
+    <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+{% else %}
+    <img src="https://via.placeholder.com/150" alt="Default Profile Picture" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+{% endif %}
+                <h6 class="card-subtitle mt-3">{{ profile.user.username }}</h6>
+                <p class="card-text">{{ profile.bio|linebreaks }}</p>
+                <p class="card-text">Hourly Rate: ${{ profile.hourly_rate }}</p>
+                <p class="card-text">Experience: {{ profile.experience_years }} years</p>
+                <p class="card-text">Skills: {{ profile.skills }}</p>
+                <p class="card-text">Rating: {{ profile.rating }}/5</p>
+                <a href="{% url 'profile' profile.user.username %}" class="btn btn-primary">View Full Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">My Services</h5>
+                {% if services %}
+                    <div class="row">
+                        {% for service in services %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ service.title }}</h6>
+                                        <p class="card-text">{{ service.description }}</p>
+                                        <p class="card-text">Rate: {{ service.rate }} {{ service.get_rate_type_display }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No services added yet.</p>
+                    <a href="{% url 'create_service' %}" class="btn btn-primary">Add Service</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">My Projects</h5>
+                {% if projects %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for project in projects %}
+                                    <tr>
+                                        <td>{{ project.title }}</td>
+                                        <td>{{ project.start_date }}</td>
+                                        <td>{{ project.end_date }}</td>
+                                        <td>
+                                            {% if project.is_completed %}
+                                                <span class="badge bg-success">Completed</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">In Progress</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No projects added yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Service{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Create New Service</h5>
+                    <form method="POST" id="service-form">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label">Service Title</label>
+                            <input type="text" class="form-control" id="id_title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="id_description" name="description" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_rate_type" class="form-label">Rate Type</label>
+                            <select class="form-select" id="id_rate_type" name="rate_type" required>
+                                <option value="FL">Freelancer</option>
+                                <option value="HR">Hourly</option>
+                                <option value="PR">Project</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_rate" class="form-label">Rate</label>
+                            <input type="number" class="form-control" id="id_rate" name="rate" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Service</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
