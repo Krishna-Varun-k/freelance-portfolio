@@ -8,6 +8,31 @@ from django.views.generic.edit import CreateView
 from .models import Profile, Service, Project
 from django.db.models import Q
 from django.urls import reverse_lazy
+from django import forms
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['title', 'description', 'start_date', 'end_date', 'is_completed']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+@login_required
+def create_project(request):
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.profile = Profile.objects.get(user=request.user)
+            project.save()
+            messages.success(request, 'Project created successfully!')
+            return redirect('dashboard')
+    else:
+        form = ProjectForm()
+    
+    return render(request, 'create_project.html', {'form': form})
 
 class RegisterView(CreateView):
     form_class = UserCreationForm

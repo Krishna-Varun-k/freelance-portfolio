@@ -84,6 +84,7 @@
                     </div>
                 {% else %}
                     <p class="text-muted">No projects added yet.</p>
+                    <a href="{% url 'create_project' %}" class="btn btn-primary">Add Project</a>
                 {% endif %}
             </div>
         </div>
